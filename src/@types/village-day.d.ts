@@ -1,0 +1,3 @@
+type VillageDay = {
+  day: number
+}

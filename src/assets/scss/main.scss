@@ -1,0 +1,46 @@
+@import 'primeflex/primeflex.scss';
+@import url('https://fonts.googleapis.com/css2?family=Sarpanch&display=swap');
+
+a {
+  @include styleclass('no-underline text-blue-500');
+}
+
+h1 {
+  @include styleclass('text-2xl font-normal');
+}
+
+h2 {
+  @include styleclass('text-lg font-normal');
+}
+
+h3 {
+  @include styleclass('text-sm font-bold');
+}
+
+p {
+  @include styleclass('line-height-3');
+  word-break: break-word;
+}
+
+.field-label {
+  @include styleclass('font-semibold text-base')
+}
+
+.field-hr {
+  @include styleclass('my-5 mx-4 md:mx-8 border-gray-100')
+}
+
+.title-font {
+  font-family: 'Sarpanch', sans-serif;
+  @include styleclass('text-4xl text-white')
+}
+
+.introduction {
+  @include styleclass('my-4 bg-gray-200 p-4 text-left list-disc')
+}
+
+@media (max-width: $sm) {
+  .hidden-sm {
+    display: none !important;
+  }
+}

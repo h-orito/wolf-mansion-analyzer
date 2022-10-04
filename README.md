@@ -40,3 +40,13 @@ npm run preview
 ```
 
 Checkout the [deployment documentation](https://v3.nuxtjs.org/guide/deploy/presets) for more information.
+
+
+## TODO
+
+* デイリーメモ一覧表示
+* 参加者メモ一覧表示
+* レイアウト変更
+* 保存
+* 認証
+* 課金

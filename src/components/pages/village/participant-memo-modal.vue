@@ -5,6 +5,7 @@
     :header="`個人メモ ${name}`"
     close-button-name="閉じる"
     @close="closeModal"
+    @hide="save"
   >
     <p class="text-left mb-2">
       部屋割り表示時の文字色: <FormColorPicker v-model:value="color" />
@@ -15,23 +16,20 @@
 
 <script setup lang="ts">
 import { Ref } from 'vue'
-// props
-interface Props {
-  participantMemos: Array<ParticipantMemo>
-  village: Village
-}
-const props = defineProps<Props>()
+import {
+  getParticipantMemo,
+  saveParticipantMemo
+} from '~/components/state/memo/participant-memo'
 
-const emit = defineEmits<{
-  (e: 'update:participant-memos', value: Array<ParticipantMemo>): void
-}>()
-
+const village = useVillage().value!
 const modal = ref()
 const isShowModal = ref(false)
 const openModal = () => {
   isShowModal.value = true
 }
-const closeModal = () => (isShowModal.value = false)
+const closeModal = () => {
+  isShowModal.value = false
+}
 
 // participant
 const participant: Ref<VillageParticipant | null> = ref(null)
@@ -43,53 +41,44 @@ const name = computed((): string => {
   return `[${roomNumber}${shortName}] ${name}`
 })
 
-// memo
-const memos = computed({
-  get: () => props.participantMemos,
-  set: (value: Array<ParticipantMemo>) =>
-    emit('update:participant-memos', value)
-})
-
 const memo = computed({
   get: () => {
-    const participantMemo = memos.value.find(
-      (p: ParticipantMemo) => p.participantId === participant?.value?.id
-    )
-    return participantMemo ? participantMemo.memo : ''
+    const id = participant?.value?.id
+    if (!id) return ''
+    return getParticipantMemo(id)?.memo || ''
   },
   set: (value: string) => {
-    const participantMemo = memos.value.find(
-      (p: ParticipantMemo) => p.participantId === participant?.value?.id
-    )
-    if (participantMemo) {
-      participantMemo.memo = value
-    }
+    const id = participant?.value?.id
+    if (!id) return
+    const participantMemo = getParticipantMemo(id)
+    if (!participantMemo) return
+    participantMemo.memo = value
   }
 })
 
 const color = computed({
   get: () => {
-    const participantMemo = memos.value.find(
-      (p: ParticipantMemo) => p.participantId === participant?.value?.id
-    )
-    return participantMemo ? participantMemo.color : ''
+    const id = participant?.value?.id
+    if (!id) return ''
+    return getParticipantMemo(id)?.color || ''
   },
   set: (value: string) => {
-    const participantMemo = memos.value.find(
-      (p: ParticipantMemo) => p.participantId === participant?.value?.id
-    )
-    if (participantMemo) {
-      participantMemo.color = value
-    }
+    const id = participant?.value?.id
+    if (!id) return
+    const participantMemo = getParticipantMemo(id)
+    if (!participantMemo) return
+    participantMemo.color = value
   }
 })
 
 const open = (participantId: number) => {
-  participant.value = props.village.participants.list.find(
+  participant.value = village.participants.list.find(
     (p: VillageParticipant) => p.id === participantId
   )
   openModal()
 }
+
+const save = () => saveParticipantMemo()
 
 defineExpose({
   open

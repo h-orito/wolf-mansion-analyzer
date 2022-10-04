@@ -1,5 +1,5 @@
 type CharaImage = {
-  faceType: string
+  faceType: FaceType
   url: string
   isDisplay: boolean
 }

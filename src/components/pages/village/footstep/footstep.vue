@@ -5,7 +5,11 @@
   </td>
   <td><FormColorPicker v-model:value="color" /></td>
   <td class="w-full">
-    <InputText v-model="memo" class="w-full" placeholder="足音メモ" />
+    <InputText
+      v-model="memo"
+      class="w-full p-inputtext-sm"
+      placeholder="足音メモ"
+    />
   </td>
 </template>
 

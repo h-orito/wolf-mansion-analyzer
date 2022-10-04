@@ -10,11 +10,14 @@
     >
       <slot name="first" />
     </div>
-    <hr
-      class="border-1 mx-2 cursor-pointer hover:border-white"
-      :class="`${grabbed ? 'border-white' : 'border-gray-500'}`"
-      @mousedown="grab"
-    />
+    <div class="cursor-pointer splitter-border" @mousedown="grab">
+      <hr
+        class="border-1 m-2 hover:border-white"
+        :class="`${grabbed ? 'border-white' : 'border-gray-500'} ${
+          direction === 'column' ? 'w-full' : 'h-full'
+        }`"
+      />
+    </div>
     <div
       ref="secondContainer"
       :class="`${direction === 'row' ? 'h-full' : 'w-full'}`"
@@ -45,10 +48,10 @@ onMounted(() => {
   const initialSize = props.size || 50
   if (props.direction === 'row') {
     firstContainer.value.style = `width: ${initialSize}%`
-    secondContainer.value.style = `width: calc(${100 - initialSize}% - 16px)`
+    secondContainer.value.style = `width: calc(${100 - initialSize}% - 18px)`
   } else {
     firstContainer.value.style = `height: ${initialSize}%`
-    secondContainer.value.style = `height: calc(${100 - initialSize}% - 32px)`
+    secondContainer.value.style = `height: calc(${100 - initialSize}% - 18px)`
   }
 })
 
@@ -75,7 +78,7 @@ const move = (event: any) => {
     const firstPercent = (width * 100) / containerWidth
     const secondPercent = 100 - firstPercent
     firstContainer.value.style = `width: ${firstPercent}%`
-    secondContainer.value.style = `width: calc(${secondPercent}% - 16px)`
+    secondContainer.value.style = `width: calc(${secondPercent}% - 18px)`
   } else {
     const containerHeight = container.value.clientHeight
     let height = event.clientY - y
@@ -83,7 +86,7 @@ const move = (event: any) => {
     const firstPercent = (height * 100) / containerHeight
     const secondPercent = 100 - firstPercent
     firstContainer.value.style = `height: ${firstPercent}%`
-    secondContainer.value.style = `height: calc(${secondPercent}% - 32px)`
+    secondContainer.value.style = `height: calc(${secondPercent}% - 18px)`
   }
 }
 
@@ -92,3 +95,13 @@ const container = computed(() => {
   else return splitterContainer.value
 })
 </script>
+
+<style lang="scss" scoped>
+.splitter-border {
+  &:hover {
+    hr {
+      border-color: #ffffff !important;
+    }
+  }
+}
+</style>

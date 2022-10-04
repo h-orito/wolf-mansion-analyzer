@@ -4,7 +4,7 @@
       <button
         v-for="daySituation in displayDaySituations"
         :key="daySituation.day"
-        class="flex-1 day-button text-white p-3 cursor-pointer"
+        class="flex-1 day-button text-white px-3 py-2 cursor-pointer"
         :class="`${activeDay === daySituation.day ? 'active' : ''}`"
         @click="selectDay(daySituation.day)"
       >
@@ -22,7 +22,6 @@
           :day-situation="daySituation"
           :village="village"
           :participant-id-to-chara="participantIdToChara"
-          :participant-memos="participantMemos"
           @memo="$emit('memo', $event)"
         />
       </div>
@@ -38,7 +37,6 @@ interface Props {
   daySituations: Array<VillageDaySituation>
   village: Village
   participantIdToChara: any
-  participantMemos: Array<ParticipantMemo>
 }
 const props = defineProps<Props>()
 

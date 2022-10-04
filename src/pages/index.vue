@@ -1,58 +1,54 @@
 <template>
-  <Title>WOLF MANSION考察ツール</Title>
+  <Title>WOLF MANSION考察ツール - {{ village.name }}</Title>
   <div class="w-full h-full flex flex-column">
-    <div>
-      <h1>{{ response.village.name }}</h1>
-    </div>
     <div class="flex-1 flex flex-column h-full overflow-auto">
-      <MySplitter direction="column" class="h-full overflow-auto" :size="60">
+      <Splitter
+        :direction="`${layout === 'layout1' ? 'row' : 'column'}`"
+        class="h-full overflow-auto"
+        :size="70"
+      >
         <template #first>
           <DaySituations
             :day-situations="response.days"
             :village="response.village"
             :participant-id-to-chara="response.participantIdToChara"
-            :participant-memos="participantMemos"
             @memo="openParticipantModal"
           />
         </template>
         <template #second>
-          <Votes
+          <WholeSituations
             :day-situations="response.days"
             :village="response.village"
             :chara-id-to-participant-id="response.charaIdToParticipantId"
           />
         </template>
-      </MySplitter>
+      </Splitter>
     </div>
-    <ParticipantMemoModal
-      ref="participantModal"
-      v-model:participant-memos="participantMemos"
-      :village="response.village"
-    />
+    <ParticipantMemoModal ref="participantModal" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { Ref } from 'vue'
 import DaySituations from '~/components/pages/village/day-situations.vue'
 
-import Votes from '~/components/pages/village/vote/votes.vue'
+import WholeSituations from '~/components/pages/village/whole-situations.vue'
 import ParticipantMemoModal from '~/components/pages/village/participant-memo-modal.vue'
-import MySplitter from '~/components/splitter/splitter.vue'
+import Splitter from '~/components/splitter/splitter.vue'
+import { initParticipantMemos } from '~/components/state/memo/participant-memo'
+import { initWholeMemo } from '~/components/state/memo/whole-memo'
+import { initDailyMemos } from '~/components/state/memo/daily-memo'
 
 const response = await useApi<void, WholeVillageSituationsContent>(
   'api/village/441'
 )
 
-const participantMemos: Ref<Array<ParticipantMemo>> = ref(
-  response.village.participants.list.map((p: VillageParticipant) => {
-    return {
-      participantId: p.id,
-      memo: '',
-      color: 'ffffff'
-    }
-  })
-)
+const village = useVillage(response.village).value!
+
+initParticipantMemos(village)
+initWholeMemo()
+initDailyMemos(village)
+
+const layout = useLayout()
 
 const participantModal = ref()
 const openParticipantModal = (participantId: number) => {
@@ -94,9 +90,9 @@ table {
 .room {
   position: relative;
   text-align: center;
-  width: 120px;
-  min-width: 120px;
-  height: 120px;
+  width: 100px;
+  min-width: 100px;
+  height: 100px;
   padding: 0;
 
   .room-image {
@@ -110,8 +106,8 @@ table {
 
   .room-memo-area {
     position: absolute;
-    width: 120px;
-    height: 60px;
+    width: 100px;
+    height: 50px;
     top: 0;
     left: 0;
     background-color: rgba(34, 34, 34, 0.5);

@@ -1,77 +1,64 @@
 <template>
-  <MySplitter direction="row">
-    <template #first>
-      <div class="h-full overflow-y-auto overflow-x-auto">
-        <h2>投票</h2>
-        <div>
-          <table>
-            <thead>
-              <th
-                class="border-1 border-bluegray-800 cursor-pointer"
-                @click="sortBy('p')"
-              >
-                投票者
-              </th>
-              <th
-                v-for="day in voteDays"
-                :key="day"
-                class="border-1 border-bluegray-800 cursor-pointer"
-                @click="sortBy(day.toString())"
-              >
-                {{ `${day}d` }}
-              </th>
-            </thead>
-            <tbody>
-              <tr
-                v-for="participantVotes in votes"
-                :key="`vote_p${participantVotes.participantId}`"
-              >
-                <td
-                  class="border-1 border-bluegray-800 p-1 cursor-pointer"
-                  @click="highlight(participantVotes.participantId)"
-                >
-                  {{ participantVotes.name }}
-                </td>
-                <td
-                  v-for="(target, d) in participantVotes.targets"
-                  :key="`vote_p${participantVotes.participantId}_d${d}`"
-                  class="border-1 border-bluegray-800 p-1 cursor-pointer"
-                  :class="`${target.highlighted ? 'bg-blue-500' : ''}`"
-                  @click="highlight(target.targetParticipantId)"
-                >
-                  {{ target.targetName }}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </template>
-
-    <template #second>
-      <div class="h-full overflow-y-auto flex flex-column">
-        <h2>全体メモ</h2>
-        <Textarea v-model="memo" class="w-full flex-1" />
-      </div>
-    </template>
-  </MySplitter>
+  <div class="h-full overflow-y-auto overflow-x-auto">
+    <label>投票</label>
+    <div>
+      <table>
+        <thead>
+          <th
+            class="border-1 border-bluegray-800 cursor-pointer"
+            @click="sortBy('p')"
+          >
+            投票者
+          </th>
+          <th
+            v-for="day in voteDays"
+            :key="day"
+            class="border-1 border-bluegray-800 cursor-pointer"
+            @click="sortBy(day.toString())"
+          >
+            {{ `${day}d` }}
+          </th>
+        </thead>
+        <tbody>
+          <tr
+            v-for="participantVotes in votes"
+            :key="`vote_p${participantVotes.participantId}`"
+          >
+            <td
+              class="border-1 border-bluegray-800 p-1 cursor-pointer"
+              @click="highlight(participantVotes.participantId)"
+            >
+              {{ participantVotes.name }}
+            </td>
+            <td
+              v-for="(target, d) in participantVotes.targets"
+              :key="`vote_p${participantVotes.participantId}_d${d}`"
+              class="border-1 border-bluegray-800 p-1 cursor-pointer"
+              :class="`${target.highlighted ? 'bg-blue-500' : ''}`"
+              @click="highlight(target.targetParticipantId)"
+            >
+              {{ target.targetName }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { Ref } from 'vue'
-import MySplitter from '~/components/splitter/splitter.vue'
 
 // props
 interface Props {
   daySituations: Array<VillageDaySituation>
-  village: Village
   charaIdToParticipantId: any
 }
 const props = defineProps<Props>()
 
+const village = useVillage().value!
 const voteDays: Ref<Array<number>> = ref([])
 const votes: Ref<Array<ParticipantVotes>> = ref([])
-const memo = ref('')
 
 onMounted(() => {
   let days: Array<number> = []
@@ -91,7 +78,7 @@ onMounted(() => {
 })
 
 const initialVotes = computed((): Array<ParticipantVotes> => {
-  return props.village.participants.list.map((p: VillageParticipant) => {
+  return village.participants.list.map((p: VillageParticipant) => {
     const roomNumber = p.room ? leftPadRoomNumber(p.room.number) : ''
     const name = `${roomNumber}${p.charaName.shortName}`
     return {
@@ -156,7 +143,9 @@ const leftPadRoomNumber = (roomNumber: number): string => {
 }
 
 const participantByCharaId = (charaId: number): VillageParticipant => {
-  return props.village.participants.list.find((p) => p.chara.id === charaId)!
+  return village.participants.list.find(
+    (p: VillageParticipant) => p.chara.id === charaId
+  )!
 }
 
 const highlight = (participantId: number | null) => {

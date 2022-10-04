@@ -1,44 +1,59 @@
 <template>
-  <RoomFootstepLines
-    v-for="(footstep, idx) in footsteps"
-    :key="`y${room.y}_x${room.x}_f${idx}`"
-    :footsteps="footstep.footstep"
-    :color="footstep.color"
-    :room="room"
-    :index="idx"
-    :day-rooms="daySituation.rooms"
-    :show="footstep.show"
-  />
-  <div v-if="memo" class="room-memo-area">
-    <p class="my-0 white-space-normal text-sm" :style="`color: #${memoColor}`">
-      {{ memo }}
-    </p>
-  </div>
-  <div class="room-image" :style="roomImageStyle" />
-  <div class="room-text-area">
-    <span v-if="status" class="room-text" :class="statusClass"
-      >{{ status }}<br
-    /></span>
-    <span v-if="isDummy" class="room-text">ダミー<br /></span>
-    <span class="room-text">{{ charaName }}</span>
+  <div
+    class="h-full w-full"
+    :class="`${room.participantId ? 'cursor-pointer' : ''}`"
+    @click="openMemoModal(room.participantId)"
+  >
+    <RoomFootstepLines
+      v-for="(footstep, idx) in footsteps"
+      :key="`y${room.y}_x${room.x}_f${idx}`"
+      :footsteps="footstep.footstep"
+      :color="footstep.color"
+      :room="room"
+      :index="idx"
+      :day-rooms="daySituation.rooms"
+      :show="footstep.show"
+    />
+    <div v-if="memo" class="room-memo-area line-height-1">
+      <p
+        class="my-0 white-space-normal text-xs"
+        :style="`color: #${memoColor}`"
+      >
+        {{ memo }}
+      </p>
+    </div>
+    <div class="room-image" :style="roomImageStyle" />
+    <div class="room-text-area line-height-1">
+      <span v-if="status" class="room-text text-xs" :class="statusClass"
+        >{{ status }}<br
+      /></span>
+      <span v-if="isDummy" class="room-text text-xs">ダミー<br /></span>
+      <span class="room-text text-xs">{{ charaName }}</span>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import RoomFootstepLines from '~/components/pages/village/footstep/room-footstep-lines.vue'
+import { getParticipantMemo } from '~/components/state/memo/participant-memo'
 
 // props
 interface Props {
   room: VillageDayRoom
   daySituation: VillageDaySituation
-  village: Village
   participantIdToChara: any
   footsteps: Array<DayFootstep>
-  participantMemo: ParticipantMemo | null
 }
 const props = defineProps<Props>()
-const defaultWidth = 120
-const defaultHeight = 120
+const defaultWidth = 100
+const defaultHeight = 100
+
+// emits
+const emit = defineEmits<{
+  (e: 'memo', participantId: number): void
+}>()
+
+const village = useVillage().value!
 
 const roomImageStyle = computed((): string => {
   if (props.room.participantId == null) {
@@ -58,7 +73,9 @@ const roomImageStyle = computed((): string => {
 const participant = computed((): VillageParticipant | null => {
   const participantId = props.room.participantId
   if (!participantId) return null
-  return props.village.participants.list.find((p) => p.id === participantId)
+  return village.participants.list.find(
+    (p: VillageParticipant) => p.id === participantId
+  )
 })
 
 const charaName = computed((): string => {
@@ -99,9 +116,7 @@ const statusClass = computed((): string | null => {
 
 const isDummy = computed((): boolean => {
   if (props.room.participantId == null) return false
-  return (
-    participant.value?.chara.id === props.village.setting.chara.dummyCharaId
-  )
+  return participant.value?.chara.id === village.setting.chara.dummyCharaId
 })
 
 const charaImageByParticipantId = (
@@ -122,15 +137,26 @@ const charaImageByParticipantId = (
   }
 }
 
+const participantMemo = computed(() => {
+  const id = props.room.participantId
+  if (!id) return null
+  return getParticipantMemo(id)
+})
+
 const memo = computed((): string => {
-  if (!props.participantMemo) return ''
-  const text = props.participantMemo.memo
+  if (!participantMemo.value) return ''
+  const text = participantMemo.value.memo
   if (text.length <= 24) return text
   return text.slice(0, 23) + '...'
 })
 
 const memoColor = computed((): string => {
-  if (!props.participantMemo) return ''
-  return props.participantMemo.color || 'ffffff'
+  if (!participantMemo.value) return ''
+  return participantMemo.value.color || 'ffffff'
 })
+
+const openMemoModal = (participantId: number | null) => {
+  if (participantId == null) return
+  emit('memo', participantId)
+}
 </script>

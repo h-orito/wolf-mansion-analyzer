@@ -26,15 +26,16 @@ const styleName = computed(() => {
 </script>
 
 <style lang="scss">
-@for $i from 0 to 15 {
-  .line-up-#{$i * 2} {
-    width: 60px - 4px * $i;
-    height: 61px - 4px * $i;
+@for $i from 0 to 10 {
+  .line-up-#{$i * 2},
+  .line-up-#{$i * 2 + 20} {
+    width: 50px - 4px * $i;
+    height: 51px - 4px * $i;
     position: absolute;
     right: 0;
     top: 0;
     border: 0;
-    border-left: 2px double;
+    border-left: 2px solid;
     z-index: 5;
 
     &.dashed {
@@ -42,14 +43,15 @@ const styleName = computed(() => {
     }
   }
 
-  .line-right-#{$i * 2} {
-    width: 60px - 4px * $i;
-    height: 61px - 4px * $i;
+  .line-right-#{$i * 2},
+  .line-right-#{$i * 2 + 20} {
+    width: 50px - 4px * $i;
+    height: 51px - 4px * $i;
     position: absolute;
     right: 0;
     top: 0;
     border: 0;
-    border-bottom: 2px double;
+    border-bottom: 2px solid;
     z-index: 5;
 
     &.dashed {
@@ -57,14 +59,15 @@ const styleName = computed(() => {
     }
   }
 
-  .line-down-#{$i * 2} {
-    width: 61px + 4px * $i;
-    height: 60px + 4px * $i;
+  .line-down-#{$i * 2},
+  .line-down-#{$i * 2 + 20} {
+    width: 51px + 4px * $i;
+    height: 50px + 4px * $i;
     position: absolute;
     left: 0;
     bottom: 0;
     border: 0;
-    border-right: 2px double;
+    border-right: 2px solid;
     z-index: 5;
 
     &.dashed {
@@ -72,14 +75,15 @@ const styleName = computed(() => {
     }
   }
 
-  .line-left-#{$i * 2} {
-    width: 61px + 4px * $i;
-    height: 60px + 4px * $i;
+  .line-left-#{$i * 2},
+  .line-left-#{$i * 2 + 20} {
+    width: 51px + 4px * $i;
+    height: 50px + 4px * $i;
     position: absolute;
     left: 0;
     bottom: 0;
     border: 0;
-    border-top: 2px double;
+    border-top: 2px solid;
     z-index: 5;
 
     &.dashed {
@@ -87,26 +91,28 @@ const styleName = computed(() => {
     }
   }
 
-  .dot-#{$i * 2} {
-    width: 16px;
-    height: 16px;
+  .dot-#{$i * 2},
+  .dot-#{$i * 2 + 20} {
+    width: 12px;
+    height: 12px;
     position: absolute;
-    left: 52px + 4px * $i;
-    top: 52px - 4px * $i;
+    left: 44px + 4px * $i;
+    top: 44px - 4px * $i;
     border-radius: 10px;
     z-index: 5;
   }
 }
 
-@for $i from 0 to 15 {
-  .line-up-#{$i * 2 + 1} {
-    width: 60px + 4px * $i;
-    height: 61px + 4px * $i;
+@for $i from 0 to 10 {
+  .line-up-#{$i * 2 + 1},
+  .line-up-#{$i * 2 + 21} {
+    width: 54px + 4px * $i;
+    height: 55px + 4px * $i;
     position: absolute;
     right: 0;
     top: 0;
     border: 0;
-    border-left: 2px double;
+    border-left: 2px solid;
     z-index: 5;
 
     &.dashed {
@@ -114,14 +120,15 @@ const styleName = computed(() => {
     }
   }
 
-  .line-right-#{$i * 2 + 1} {
-    width: 60px + 4px * $i;
-    height: 61px + 4px * $i;
+  .line-right-#{$i * 2 + 1},
+  .line-right-#{$i * 2 + 21} {
+    width: 54px + 4px * $i;
+    height: 55px + 4px * $i;
     position: absolute;
     right: 0;
     top: 0;
     border: 0;
-    border-bottom: 2px double;
+    border-bottom: 2px solid;
     z-index: 5;
 
     &.dashed {
@@ -129,14 +136,15 @@ const styleName = computed(() => {
     }
   }
 
-  .line-down-#{$i * 2 + 1} {
-    width: 61px - 4px * $i;
-    height: 60px - 4px * $i;
+  .line-down-#{$i * 2 + 1},
+  .line-down-#{$i * 2 + 21} {
+    width: 47px - 4px * $i;
+    height: 46px - 4px * $i;
     position: absolute;
     left: 0;
     bottom: 0;
     border: 0;
-    border-right: 2px double;
+    border-right: 2px solid;
     z-index: 5;
 
     &.dashed {
@@ -144,14 +152,15 @@ const styleName = computed(() => {
     }
   }
 
-  .line-left-#{$i * 2 + 1} {
-    width: 61px - 4px * $i;
-    height: 60px - 4px * $i;
+  .line-left-#{$i * 2 + 1},
+  .line-left-#{$i * 2 + 21} {
+    width: 47px - 4px * $i;
+    height: 46px - 4px * $i;
     position: absolute;
     left: 0;
     bottom: 0;
     border: 0;
-    border-top: 2px double;
+    border-top: 2px solid;
     z-index: 5;
 
     &.dashed {
@@ -159,12 +168,13 @@ const styleName = computed(() => {
     }
   }
 
-  .dot-#{$i * 2 + 1} {
-    width: 16px;
-    height: 16px;
+  .dot-#{$i * 2 + 1},
+  .dot-#{$i * 2 + 21} {
+    width: 12px;
+    height: 12px;
     position: absolute;
-    left: 52px - 4px * $i;
-    top: 52px + 4px * $i;
+    left: 40px - 4px * $i;
+    top: 40px + 4px * $i;
     border-radius: 10px;
     z-index: 5;
   }

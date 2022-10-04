@@ -6,6 +6,7 @@
     :dismissable-mask="true"
     class="text-sm"
     style="min-width: 50%"
+    @hide="$emit('hide')"
   >
     <slot />
     <template #footer>
@@ -41,6 +42,7 @@ const emit = defineEmits<{
   (e: 'update:show', value: boolean): boolean
   (e: 'submit'): void
   (e: 'close'): void
+  (e: 'hide'): void // 閉じた時のイベント
 }>()
 
 const isShow = computed({

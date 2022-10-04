@@ -15,5 +15,7 @@ module.exports = {
     sourceType: 'module'
   },
   plugins: ['vue', '@typescript-eslint', '@typescript-eslint/eslint-plugin'],
-  rules: {}
+  rules: {
+    '@typescript-eslint/no-non-null-assertion': 'off'
+  }
 }

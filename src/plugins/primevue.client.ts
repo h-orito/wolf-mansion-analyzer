@@ -22,9 +22,6 @@ import Tooltip from 'primevue/tooltip'
 import TabView from 'primevue/tabview'
 import TabPanel from 'primevue/tabpanel'
 import ColorPicker from 'primevue/colorpicker'
-import Splitter from 'primevue/splitter'
-import SplitterPanel from 'primevue/splitterpanel'
-import ScrollPanel from 'primevue/scrollpanel'
 
 export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.use(PrimeVue, {
@@ -52,8 +49,5 @@ export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.component('TabView', TabView)
   nuxtApp.vueApp.component('TabPanel', TabPanel)
   nuxtApp.vueApp.component('ColorPicker', ColorPicker)
-  nuxtApp.vueApp.component('Splitter', Splitter)
-  nuxtApp.vueApp.component('SplitterPanel', SplitterPanel)
-  nuxtApp.vueApp.component('ScrollPanel', ScrollPanel)
   nuxtApp.vueApp.directive('tooltip', Tooltip)
 })

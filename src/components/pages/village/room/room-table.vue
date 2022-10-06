@@ -7,7 +7,6 @@
             :room="room"
             :day-situation="daySituation"
             :participant-id-to-chara="participantIdToChara"
-            :footsteps="footsteps"
             @memo="$emit('memo', $event)"
           />
         </td>
@@ -23,7 +22,6 @@ import Room from '~/components/pages/village/room/room.vue'
 interface Props {
   daySituation: VillageDaySituation
   participantIdToChara: any
-  footsteps: Array<DayFootstep>
 }
 const props = defineProps<Props>()
 

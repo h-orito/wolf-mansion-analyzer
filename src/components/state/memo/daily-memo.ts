@@ -15,7 +15,11 @@ export const initDailyMemos = (village: Village) => {
 }
 
 export const getDailyMemo = (day: number): DailyMemo => {
-  return useDailyMemos().value?.find((dm) => dm.day === day)!
+  return useDailyMemos().value!.find((dm) => dm.day === day)!
+}
+
+export const getWholeDailyMemos = () => {
+  return useDailyMemos().value!
 }
 
 export const saveDailyMemo = () => {

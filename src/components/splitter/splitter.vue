@@ -10,13 +10,17 @@
     >
       <slot name="first" />
     </div>
-    <div class="cursor-pointer splitter-border" @mousedown="grab">
-      <hr
-        class="border-1 m-2 hover:border-white"
+    <div
+      class="cursor-pointer splitter-border p-2"
+      :class="`${direction === 'row' ? 'h-full' : 'w-full'}`"
+      @mousedown="grab"
+    >
+      <span
+        class="border-1 hover:border-white block"
         :class="`${grabbed ? 'border-white' : 'border-gray-500'} ${
-          direction === 'column' ? 'w-full' : 'h-full'
+          direction === 'row' ? 'h-full' : 'w-full'
         }`"
-      />
+      ></span>
     </div>
     <div
       ref="secondContainer"
@@ -99,7 +103,7 @@ const container = computed(() => {
 <style lang="scss" scoped>
 .splitter-border {
   &:hover {
-    hr {
+    span {
       border-color: #ffffff !important;
     }
   }

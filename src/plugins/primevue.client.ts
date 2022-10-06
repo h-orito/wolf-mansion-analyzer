@@ -22,6 +22,7 @@ import Tooltip from 'primevue/tooltip'
 import TabView from 'primevue/tabview'
 import TabPanel from 'primevue/tabpanel'
 import ColorPicker from 'primevue/colorpicker'
+import Listbox from 'primevue/listbox'
 
 export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.use(PrimeVue, {
@@ -49,5 +50,6 @@ export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.component('TabView', TabView)
   nuxtApp.vueApp.component('TabPanel', TabPanel)
   nuxtApp.vueApp.component('ColorPicker', ColorPicker)
+  nuxtApp.vueApp.component('Listbox', Listbox)
   nuxtApp.vueApp.directive('tooltip', Tooltip)
 })

@@ -36,13 +36,13 @@
 <script setup lang="ts">
 import RoomFootstepLines from '~/components/pages/village/footstep/room-footstep-lines.vue'
 import { getParticipantMemo } from '~/components/state/memo/participant-memo'
+import { getDailyFootstepMemos } from '~/components/state/memo/daily-footstep-memo'
 
 // props
 interface Props {
   room: VillageDayRoom
   daySituation: VillageDaySituation
   participantIdToChara: any
-  footsteps: Array<DayFootstep>
 }
 const props = defineProps<Props>()
 const defaultWidth = 100
@@ -54,6 +54,7 @@ const emit = defineEmits<{
 }>()
 
 const village = useVillage().value!
+const footsteps = getDailyFootstepMemos(props.daySituation.day)
 
 const roomImageStyle = computed((): string => {
   if (props.room.participantId == null) {

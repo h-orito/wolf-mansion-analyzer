@@ -1,58 +1,60 @@
 <template>
-  <Title>WOLF MANSION考察ツール - {{ village.name }}</Title>
-  <div class="w-full h-full flex flex-column">
-    <div class="flex-1 flex flex-column h-full overflow-auto">
-      <Splitter
-        :direction="`${layout === 'layout1' ? 'row' : 'column'}`"
-        class="h-full overflow-auto"
-        :size="70"
-      >
-        <template #first>
-          <DaySituations
-            :day-situations="response.days"
-            :village="response.village"
-            :participant-id-to-chara="response.participantIdToChara"
-            @memo="openParticipantModal"
+  <div class="flex flex-column h-full wrapper">
+    <VillageHeader @clear-village="clear" />
+    <div class="flex-1 p-2 w-full max-w-full mx-auto h-full overflow-auto">
+      <div class="w-full h-full">
+        <Village v-if="situation" ref="villageRef" :situation="situation" />
+        <div v-else class="flex flex-column h-full">
+          <p>村を選択してください。</p>
+          <Listbox
+            v-model="id"
+            :options="villageCandidates"
+            :filter="true"
+            option-label="label"
+            option-value="value"
+            class="text-left"
+            filter-placeholder="Search"
+            :virtual-scroller-options="{ itemSize: 40 }"
+            list-style="height: 50vh"
+            @change="fetchSituation"
           />
-        </template>
-        <template #second>
-          <WholeSituations
-            :day-situations="response.days"
-            :village="response.village"
-            :chara-id-to-participant-id="response.charaIdToParticipantId"
-          />
-        </template>
-      </Splitter>
+        </div>
+      </div>
     </div>
-    <ParticipantMemoModal ref="participantModal" />
   </div>
 </template>
 
 <script setup lang="ts">
-import DaySituations from '~/components/pages/village/day-situations.vue'
+import { Ref } from 'vue'
+import VillageHeader from '~/components/pages/village/header/village-header.vue'
+import Village from '~/components/pages/village/village.vue'
 
-import WholeSituations from '~/components/pages/village/whole-situations.vue'
-import ParticipantMemoModal from '~/components/pages/village/participant-memo-modal.vue'
-import Splitter from '~/components/splitter/splitter.vue'
-import { initParticipantMemos } from '~/components/state/memo/participant-memo'
-import { initWholeMemo } from '~/components/state/memo/whole-memo'
-import { initDailyMemos } from '~/components/state/memo/daily-memo'
+const villagesContent: VillageListContent = await useApi<
+  void,
+  VillageListContent
+>('api/village-list')
+const villageCandidates = computed(() => {
+  return villagesContent.villageList.map((v) => {
+    return {
+      label: `${v.villageNumber} - ${v.villageName}`,
+      value: v.villageId
+    }
+  })
+})
+const id = ref()
 
-const response = await useApi<void, WholeVillageSituationsContent>(
-  'api/village/441'
-)
+const situation: Ref<WholeVillageSituationsContent | null> = ref(null)
+const fetchSituation = async () => {
+  situation.value = await useApi<void, WholeVillageSituationsContent>(
+    `api/village/${id.value}`
+  )
+}
 
-const village = useVillage(response.village).value!
-
-initParticipantMemos(village)
-initWholeMemo()
-initDailyMemos(village)
-
-const layout = useLayout()
-
-const participantModal = ref()
-const openParticipantModal = (participantId: number) => {
-  participantModal.value.open(participantId)
+const villageRef = ref()
+const clear = () => {
+  id.value = null
+  situation.value = null
+  villageRef.value.reset()
 }
 </script>
 
@@ -70,6 +72,10 @@ table {
   th {
     border: 1px solid var(--bluegray-800);
   }
+}
+
+.p-listbox-list-wrapper {
+  max-height: 100%;
 }
 
 .p-splitter {

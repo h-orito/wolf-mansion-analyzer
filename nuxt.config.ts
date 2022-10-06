@@ -8,7 +8,7 @@ export default defineNuxtConfig({
     firebaseApiKey: process.env.FIREBASE_API_KEY,
     firebaseAuthDomain: process.env.FIREBASE_AUTH_DOMAIN,
     imageDomain: 'https://wolfort.net',
-    apiBase: process.env.API_BASE || 'http://localhost:8089/wolf-mansion/',
+    apiBase: process.env.API_BASE || 'https://wolfort.net/wolf-mansion/',
     nodeEnv: process.env.NODE_ENV || 'local'
   },
   privateRuntimeConfig: {},

@@ -5,7 +5,7 @@
         >{{ label }}<span v-if="required" class="text-red-500"> *</span></label
       >
     </div>
-    <FormText :id="id" v-model:value="value" :has-error="hasError" />
+    <FormPassword :id="id" v-model:value="value" :has-error="hasError" />
     <div v-if="hasError" class="p-error text-xs">
       {{ errorMessage }}
     </div>

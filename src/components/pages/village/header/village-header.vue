@@ -11,6 +11,13 @@
     <div class="ml-auto mr-2 my-auto">
       <a class="cursor-pointer" @click="$emit('clear-village')">村変更</a>
     </div>
+    <div class="ml-2 mr-2 my-auto">
+      <a class="cursor-pointer" @click="openInstruction()">説明書</a>
+    </div>
+    <div v-if="player" class="ml-2 mr-2 my-auto">
+      <a class="cursor-pointer" @click="logout">ログアウト</a>
+      &nbsp;ユーザID: {{ player.name }}
+    </div>
     <div v-if="false" class="ml-auto mr-2 my-auto">
       <SelectButton
         v-model="villageLayout"
@@ -20,10 +27,14 @@
         class="layout-select"
       />
     </div>
+    <Instruction v-model:show="isShowInstruction" />
   </div>
 </template>
 
 <script setup lang="ts">
+import Instruction from './instruction.vue'
+import { logoutPlayer } from '~/components/auth/auth-cookie'
+
 defineEmits<{
   (e: 'clear-village'): void
 }>()
@@ -45,6 +56,16 @@ const layouts = computed(() => {
 })
 
 const villageLayout = useLayout()
+
+const isShowInstruction = ref(false)
+const openInstruction = () => (isShowInstruction.value = true)
+
+const player = usePlayer()
+const logout = () => {
+  usePlayer(null, true)
+  logoutPlayer()
+  location.reload()
+}
 </script>
 
 <style lang="scss">

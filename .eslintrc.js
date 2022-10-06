@@ -16,6 +16,7 @@ module.exports = {
   },
   plugins: ['vue', '@typescript-eslint', '@typescript-eslint/eslint-plugin'],
   rules: {
-    '@typescript-eslint/no-non-null-assertion': 'off'
+    '@typescript-eslint/no-non-null-assertion': 'off',
+    'vue/multi-word-component-names': 'off'
   }
 }

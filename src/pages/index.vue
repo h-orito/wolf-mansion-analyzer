@@ -1,5 +1,6 @@
 <template>
   <div class="flex flex-column h-full wrapper">
+    <Title>{{ title }}</Title>
     <VillageHeader @clear-village="clear" />
     <div class="flex-1 p-2 w-full max-w-full mx-auto h-full overflow-auto">
       <div class="w-full h-full">
@@ -56,6 +57,13 @@ const clear = () => {
   situation.value = null
   villageRef.value.reset()
 }
+
+const title = computed(() => {
+  const base = 'WOLF MANSION Analyzer - '
+  if (!situation.value) return base + '村選択'
+  const village = situation.value.village
+  return base + `${village.id} ${village.name}`
+})
 </script>
 
 <style lang="scss">

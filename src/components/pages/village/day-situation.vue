@@ -43,7 +43,7 @@
 import RoomTable from '~/components/pages/village/room/room-table.vue'
 import Footsteps from '~/components/pages/village/footstep/footsteps.vue'
 import Splitter from '~/components/splitter/splitter.vue'
-import { getDailyMemo } from '~/components/state/memo/daily-memo'
+import { getDailyMemo, setDailyMemo } from '~/components/state/memo/daily-memo'
 
 // props
 interface Props {
@@ -57,10 +57,18 @@ defineEmits<{
   (e: 'memo', participantId: number): void
 }>()
 
-const dailyMemo = getDailyMemo(props.daySituation.day)
+const dailyMemo = computed({
+  get: () => getDailyMemo(props.daySituation.day),
+  set: (value: DailyMemo | null) =>
+    value ?? setDailyMemo(props.daySituation.day, value!)
+})
+
 const memo = computed({
-  get: () => dailyMemo.memo,
-  set: (value: string) => (dailyMemo.memo = value)
+  get: () => dailyMemo.value?.memo || '',
+  set: (value: string) => {
+    if (dailyMemo.value == null) return
+    dailyMemo.value.memo = value
+  }
 })
 
 const openWholeDailyMemoDialog = () => {

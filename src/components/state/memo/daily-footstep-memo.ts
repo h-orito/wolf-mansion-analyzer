@@ -1,28 +1,56 @@
 export const initDailyFootstepMemos = (
+  memos: PlayerMemo | null,
   daySituations: Array<VillageDaySituation>
 ) => {
-  // TODO: RTDBからの取得処理
+  if (!!memos) {
+    useDailyFootstepMemos(
+      daySituations.map((daySituation) => {
+        const existing = memos!.dailyFootstepMemos.find(
+          (dfm) => dfm.day === daySituation.day
+        )
+        return existing || mapFootstepMemo(daySituation)
+      })
+    )
+    return
+  }
 
-  // TODO: 日付が増えていた場合の考慮
   useDailyFootstepMemos(
-    daySituations.map((daySituation) => {
-      return {
-        day: daySituation.day,
-        footsteps: daySituation.footsteps.map((f, index) => {
-          return {
-            footstep: f,
-            color: getColor(index),
-            show: true,
-            memo: ''
-          }
-        })
-      }
-    })
+    daySituations.map((daySituation) => mapFootstepMemo(daySituation))
   )
 }
 
+const mapFootstepMemo = (
+  daySituation: VillageDaySituation
+): DailyFootstepMemo => {
+  return {
+    day: daySituation.day,
+    footsteps: daySituation.footsteps.map((f, index) => {
+      return {
+        footstep: f,
+        color: getColor(index),
+        show: true,
+        memo: ''
+      }
+    })
+  }
+}
+
+export const clearDailyFootstepMemos = () => useDailyFootstepMemos([])
+
 export const getDailyFootstepMemos = (day: number): Array<DayFootstep> => {
-  return useDailyFootstepMemos().value!.find((dm) => dm.day === day)!.footsteps
+  return (
+    useDailyFootstepMemos().value?.find((dm) => dm.day === day)?.footsteps || []
+  )
+}
+
+export const setDailyFootstepMemos = (
+  day: number,
+  memos: Array<DayFootstep>
+) => {
+  const updated = useDailyFootstepMemos().value!.map((dm) => {
+    return dm.day === day ? { day, footsteps: memos } : dm
+  })
+  useDailyFootstepMemos(updated)
 }
 
 export const showAll = (day: number) => {
@@ -44,10 +72,6 @@ export const reverseAll = (day: number) => {
   footsteps.forEach((f) => {
     f.show = !f.show
   })
-}
-
-export const saveDailyFootstepMemo = () => {
-  // TODO: RTDBに保存
 }
 
 const getColor = (index: number): string => {

@@ -17,6 +17,7 @@
           <WholeSituations
             :day-situations="situation.days"
             :chara-id-to-participant-id="situation.charaIdToParticipantId"
+            @refresh-village="$emit('refresh-village')"
           />
         </template>
       </Splitter>
@@ -32,18 +33,16 @@ import WholeSituations from '~/components/pages/village/whole-situations.vue'
 import ParticipantMemoModal from '~/components/pages/village/participant-memo-modal.vue'
 import WholeDailyMemoDialog from '~/components/pages/village/whole-daily-memo-dialog.vue'
 import Splitter from '~/components/splitter/splitter.vue'
-import { initParticipantMemos } from '~/components/state/memo/participant-memo'
-import { initWholeMemo } from '~/components/state/memo/whole-memo'
-import { initDailyMemos } from '~/components/state/memo/daily-memo'
-import { initDailyFootstepMemos } from '~/components/state/memo/daily-footstep-memo'
 
 // props
 interface Props {
   situation: WholeVillageSituationsContent
 }
-const props = defineProps<Props>()
+defineProps<Props>()
 
-const village = useVillage(props.situation.village).value!
+defineEmits<{
+  (e: 'refresh-village'): void
+}>()
 
 const layout = useLayout()
 
@@ -51,16 +50,4 @@ const participantModal = ref()
 const openParticipantModal = (participantId: number) => {
   participantModal.value.open(participantId)
 }
-
-const reset = async () => {
-  initParticipantMemos(village)
-  initWholeMemo()
-  initDailyMemos(village)
-  initDailyFootstepMemos(props.situation.days)
-}
-await reset()
-
-defineExpose({
-  reset
-})
 </script>

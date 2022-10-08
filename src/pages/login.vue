@@ -7,6 +7,7 @@
           WOLF MANSIONのアカウントでログインしてください。<br />
           （5回間違えるとログインできなくなります）
         </p>
+        <p v-if="errorMessage" class="p-error">{{ errorMessage }}</p>
         <FormTextField
           id="username"
           v-model:value="username"
@@ -41,16 +42,20 @@ import { setBan, setPlayer } from '../components/auth/auth-cookie'
 const username = ref('')
 const password = ref('')
 const count = ref(0)
+const errorMessage = ref('')
 
 const submit = async () => {
   const player = await login(username.value, password.value)
-  if (player == null) {
+  if (player?.id == null) {
     count.value = count.value++
+    errorMessage.value = 'ユーザIDまたはパスワードが異なります'
+    if (count.value > 4) {
+      setBan()
+      location.reload()
+    }
+    return
   }
-  if (count.value > 4) {
-    setBan()
-    location.reload()
-  }
+
   setPlayer(player!.id, player!.name)
   location.href = '/'
 }

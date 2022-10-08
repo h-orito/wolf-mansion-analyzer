@@ -30,10 +30,10 @@ defineEmits<{
   (e: 'memo', participantId: number): void
 }>()
 
-const village = useVillage().value!
+const village = computed(() => useVillage().value!)
 
 const roomRows = computed((): Array<Array<VillageDayRoom>> => {
-  return [...Array(village.roomSize!.height)]
+  return [...Array(village.value.roomSize!.height)]
     .map((_, i) => i)
     .map((y) => {
       return props.daySituation.rooms.filter((r) => r.y === y)

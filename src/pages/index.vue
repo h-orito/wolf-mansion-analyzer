@@ -4,9 +4,13 @@
     <VillageHeader @clear-village="clear" />
     <div class="flex-1 p-2 w-full max-w-full mx-auto h-full overflow-auto">
       <div class="w-full h-full">
-        <Village v-if="situation" ref="villageRef" :situation="situation" />
+        <Village
+          v-if="!!situation && !!village"
+          :situation="situation"
+          @refresh-village="refreshVillage"
+        />
         <div v-else class="flex flex-column h-full">
-          <p>村を選択してください。</p>
+          <p>村を選択してください。（開始前の村は表示されません）</p>
           <Listbox
             v-model="id"
             :options="villageCandidates"
@@ -17,7 +21,7 @@
             filter-placeholder="Search"
             :virtual-scroller-options="{ itemSize: 40 }"
             list-style="height: 50vh"
-            @change="fetchSituation"
+            @change="initVillage"
           />
         </div>
       </div>
@@ -29,33 +33,48 @@
 import { Ref } from 'vue'
 import VillageHeader from '~/components/pages/village/header/village-header.vue'
 import Village from '~/components/pages/village/village.vue'
+import { initMemos, clearMemos, saveMemos } from '~/components/state/memo/memo'
 
 const villagesContent: VillageListContent = await useApi<
   void,
   VillageListContent
 >('api/village-list')
 const villageCandidates = computed(() => {
-  return villagesContent.villageList.map((v) => {
-    return {
-      label: `${v.villageNumber} - ${v.villageName}`,
-      value: v.villageId
-    }
-  })
+  return villagesContent.villageList
+    .filter((v) => v.status !== '募集中')
+    .map((v) => {
+      return {
+        label: `${v.villageNumber} - ${v.villageName}`,
+        value: v.villageId
+      }
+    })
 })
 const id = ref()
 
 const situation: Ref<WholeVillageSituationsContent | null> = ref(null)
+const village = useVillage()
 const fetchSituation = async () => {
   situation.value = await useApi<void, WholeVillageSituationsContent>(
     `api/village/${id.value}`
   )
 }
 
-const villageRef = ref()
+const refreshVillage = async () => {
+  await saveMemos()
+  await initVillage()
+}
+
+const initVillage = async () => {
+  await fetchSituation()
+  if (!situation.value) return
+  useVillage(situation.value.village)
+  await initMemos(situation.value!.days, situation.value!.village)
+}
+
 const clear = () => {
   id.value = null
   situation.value = null
-  villageRef.value.reset()
+  clearMemos()
 }
 
 const title = computed(() => {

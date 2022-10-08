@@ -4,14 +4,15 @@ export default defineNuxtConfig({
   typescript: {
     strict: true
   },
-  publicRuntimeConfig: {
-    firebaseApiKey: process.env.FIREBASE_API_KEY,
-    firebaseAuthDomain: process.env.FIREBASE_AUTH_DOMAIN,
-    imageDomain: 'https://wolfort.net',
-    apiBase: process.env.API_BASE || 'https://wolfort.net/wolf-mansion/',
-    nodeEnv: process.env.NODE_ENV || 'local'
+  runtimeConfig: {
+    public: {
+      apiBase: process.env.API_BASE || 'https://wolfort.net/wolf-mansion/',
+      nodeEnv: process.env.NODE_ENV || 'local',
+      firebaseApiKey: process.env.FIREBASE_API_KEY,
+      firebaseDatabaseUrl: process.env.FIREBASE_DATABASE_URL,
+      firebaseProjectId: process.env.FIREBASE_PROJECT_ID
+    }
   },
-  privateRuntimeConfig: {},
   css: [
     'primevue/resources/themes/vela-green/theme.css',
     'primevue/resources/primevue.css',

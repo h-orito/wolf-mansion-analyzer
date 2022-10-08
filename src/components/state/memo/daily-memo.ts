@@ -1,21 +1,37 @@
-export const initDailyMemos = (village: Village) => {
-  // TODO: RTDBからの取得処理
+export const initDailyMemos = (memos: PlayerMemo | null, village: Village) => {
+  if (!!memos) {
+    useDailyMemos(
+      village.days.list
+        .filter((d) => d.day >= 2)
+        .map((d) => {
+          const existing = memos!.dailyMemos.find((dm) => dm.day === d.day)
+          return existing || getInitial(d.day)
+        })
+    )
+    return
+  }
 
-  // TODO: 日付が増えていた場合の考慮
   useDailyMemos(
-    village.days.list
-      .filter((d) => d.day >= 2)
-      .map((d) => {
-        return {
-          day: d.day,
-          memo: ''
-        }
-      })
+    village.days.list.filter((d) => d.day >= 2).map((d) => getInitial(d.day))
   )
 }
 
-export const getDailyMemo = (day: number): DailyMemo => {
-  return useDailyMemos().value!.find((dm) => dm.day === day)!
+const getInitial = (day: number): DailyMemo => ({
+  day,
+  memo: ''
+})
+
+export const clearDailyMemos = () => useDailyMemos([])
+
+export const getDailyMemo = (day: number): DailyMemo | null => {
+  return useDailyMemos().value?.find((dm) => dm.day === day) || null
+}
+
+export const setDailyMemo = (day: number, memo: DailyMemo) => {
+  const updated = useDailyMemos().value!.map((dm) => {
+    return dm.day === day ? memo : dm
+  })
+  useDailyMemos(updated)
 }
 
 export const getWholeDailyMemos = () => {

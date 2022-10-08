@@ -53,7 +53,7 @@ const emit = defineEmits<{
   (e: 'memo', participantId: number): void
 }>()
 
-const village = useVillage().value!
+const village = computed(() => useVillage().value!)
 const footsteps = computed(() => getDailyFootstepMemos(props.daySituation.day))
 
 const roomImageStyle = computed((): string => {
@@ -74,7 +74,7 @@ const roomImageStyle = computed((): string => {
 const participant = computed((): VillageParticipant | null => {
   const participantId = props.room.participantId
   if (!participantId) return null
-  return village.participants.list.find(
+  return village.value.participants.list.find(
     (p: VillageParticipant) => p.id === participantId
   )
 })
@@ -117,7 +117,9 @@ const statusClass = computed((): string | null => {
 
 const isDummy = computed((): boolean => {
   if (props.room.participantId == null) return false
-  return participant.value?.chara.id === village.setting.chara.dummyCharaId
+  return (
+    participant.value?.chara.id === village.value.setting.chara.dummyCharaId
+  )
 })
 
 const charaImageByParticipantId = (

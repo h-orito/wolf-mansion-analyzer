@@ -24,6 +24,7 @@
 import Footstep from '~/components/pages/village/footstep/footstep.vue'
 import {
   getDailyFootstepMemos,
+  setDailyFootstepMemos,
   showAll,
   hideAll,
   reverseAll
@@ -35,7 +36,11 @@ interface Props {
 }
 const props = defineProps<Props>()
 
-const footsteps = getDailyFootstepMemos(props.daySituation.day)
+const footsteps = computed({
+  get: () => getDailyFootstepMemos(props.daySituation.day),
+  set: (value: DayFootstep[]) =>
+    setDailyFootstepMemos(props.daySituation.day, value)
+})
 
 const allOn = () => showAll(props.daySituation.day)
 const allOff = () => hideAll(props.daySituation.day)

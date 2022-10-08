@@ -56,58 +56,58 @@ interface Props {
 }
 const props = defineProps<Props>()
 
-const village = useVillage().value!
-const voteDays: Ref<Array<number>> = ref([])
+const village = computed(() => useVillage().value!)
+const voteDays = computed(() => {
+  return props.daySituations.map((d) => d.day).filter((day) => day >= 3)
+})
 const votes: Ref<Array<ParticipantVotes>> = ref([])
 
 onMounted(() => {
-  let days: Array<number> = []
-  for (
-    let i = 3;
-    i <= props.daySituations.map((d) => d.day).reduce((a, b) => Math.max(a, b));
-    i++
-  ) {
-    days.push(i)
-  }
-  voteDays.value = days
-  votes.value = initialVotes.value.sort(
-    (p1: ParticipantVotes, p2: ParticipantVotes) => {
-      return p1.name.localeCompare(p2.name)
-    }
-  )
+  votes.value = initialVotes.value
 })
 
+watch(
+  () => village.value.id,
+  () => {
+    votes.value = initialVotes.value
+  }
+)
+
 const initialVotes = computed((): Array<ParticipantVotes> => {
-  return village.participants.list.map((p: VillageParticipant) => {
-    const roomNumber = p.room ? leftPadRoomNumber(p.room.number) : ''
-    const name = `${roomNumber}${p.charaName.shortName}`
-    return {
-      participantId: p.id,
-      name: `${roomNumber}${p.charaName.shortName}`,
-      targets: voteDays.value.map((day) => {
-        const vote = props.daySituations
-          .find((ds) => ds.day === day)!
-          .votes.find((v) => v.charaId === p.chara.id)
-        const target: VillageParticipant | null = vote
-          ? participantByCharaId(vote?.targetCharaId)
-          : null
-        const targetRoomNumber = target?.room
-          ? leftPadRoomNumber(target.room.number)
-          : ''
-        const targetName = target
-          ? `${targetRoomNumber}${target.charaName.shortName}`
-          : null
-        return {
-          day,
-          participantId: p.id,
-          name,
-          targetParticipantId: target?.id || null,
-          targetName,
-          highlighted: false
-        }
-      })
-    }
-  })
+  return village.value.participants.list
+    .map((p: VillageParticipant) => {
+      const roomNumber = p.room ? leftPadRoomNumber(p.room.number) : ''
+      const name = `${roomNumber}${p.charaName.shortName}`
+      return {
+        participantId: p.id,
+        name: `${roomNumber}${p.charaName.shortName}`,
+        targets: voteDays.value.map((day) => {
+          const vote = props.daySituations
+            .find((ds) => ds.day === day)!
+            .votes.find((v) => v.charaId === p.chara.id)
+          const target: VillageParticipant | null = vote
+            ? participantByCharaId(vote?.targetCharaId)
+            : null
+          const targetRoomNumber = target?.room
+            ? leftPadRoomNumber(target.room.number)
+            : ''
+          const targetName = target
+            ? `${targetRoomNumber}${target.charaName.shortName}`
+            : null
+          return {
+            day,
+            participantId: p.id,
+            name,
+            targetParticipantId: target?.id || null,
+            targetName,
+            highlighted: false
+          }
+        })
+      }
+    })
+    .sort((p1: ParticipantVotes, p2: ParticipantVotes) => {
+      return p1.name.localeCompare(p2.name)
+    })
 })
 
 const sortBy = (key: string) => {
@@ -143,7 +143,7 @@ const leftPadRoomNumber = (roomNumber: number): string => {
 }
 
 const participantByCharaId = (charaId: number): VillageParticipant => {
-  return village.participants.list.find(
+  return village.value.participants.list.find(
     (p: VillageParticipant) => p.chara.id === charaId
   )!
 }

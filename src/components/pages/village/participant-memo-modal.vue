@@ -18,10 +18,10 @@
 import { Ref } from 'vue'
 import {
   getParticipantMemo,
-  saveParticipantMemo
+  setParticipantMemo
 } from '~/components/state/memo/participant-memo'
 
-const village = useVillage().value!
+const village = computed(() => useVillage().value!)
 const modal = ref()
 const isShowModal = ref(false)
 const openModal = () => {
@@ -41,44 +41,45 @@ const name = computed((): string => {
   return `[${roomNumber}${shortName}] ${name}`
 })
 
-const memo = computed({
+const participantMemo = computed({
   get: () => {
     const id = participant?.value?.id
-    if (!id) return ''
-    return getParticipantMemo(id)?.memo || ''
+    if (!id) return null
+    return getParticipantMemo(id)
   },
-  set: (value: string) => {
+  set: (value: ParticipantMemo | null) => {
     const id = participant?.value?.id
-    if (!id) return
-    const participantMemo = getParticipantMemo(id)
-    if (!participantMemo) return
-    participantMemo.memo = value
+    if (!id || !value) return
+    setParticipantMemo(id, value)
+  }
+})
+
+const memo = computed({
+  get: () => participantMemo.value?.memo || '',
+  set: (value: string) => {
+    if (!participantMemo.value) return
+    participantMemo.value.memo = value
   }
 })
 
 const color = computed({
-  get: () => {
-    const id = participant?.value?.id
-    if (!id) return ''
-    return getParticipantMemo(id)?.color || ''
-  },
+  get: () => participantMemo.value?.color || '',
   set: (value: string) => {
-    const id = participant?.value?.id
-    if (!id) return
-    const participantMemo = getParticipantMemo(id)
-    if (!participantMemo) return
-    participantMemo.color = value
+    if (!participantMemo.value) return
+    participantMemo.value.color = value
   }
 })
 
 const open = (participantId: number) => {
-  participant.value = village.participants.list.find(
+  participant.value = village.value.participants.list.find(
     (p: VillageParticipant) => p.id === participantId
   )
   openModal()
 }
 
-const save = () => saveParticipantMemo()
+const save = () => {
+  // TODO
+}
 
 defineExpose({
   open

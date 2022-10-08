@@ -54,7 +54,7 @@ const emit = defineEmits<{
 }>()
 
 const village = useVillage().value!
-const footsteps = getDailyFootstepMemos(props.daySituation.day)
+const footsteps = computed(() => getDailyFootstepMemos(props.daySituation.day))
 
 const roomImageStyle = computed((): string => {
   if (props.room.participantId == null) {

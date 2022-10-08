@@ -1,10 +1,25 @@
 <template>
   <Splitter :direction="`${layout === 'layout1' ? 'column' : 'row'}`">
     <template #first>
-      <Votes
-        :day-situations="daySituations"
-        :chara-id-to-participant-id="charaIdToParticipantId"
-      />
+      <div class="h-full w-full overflow-auto flex flex-column">
+        <div class="flex justify-content-end mb-2">
+          <ButtonPrimary
+            class="py-1 mr-2"
+            label="メモ保存"
+            @click="saveMemos"
+          />
+          <ButtonPrimary
+            class="py-1"
+            :disabled="!isProgress"
+            label="村状況更新"
+            @click="$emit('refresh-village')"
+          />
+        </div>
+        <Votes
+          :day-situations="daySituations"
+          :chara-id-to-participant-id="charaIdToParticipantId"
+        />
+      </div>
     </template>
 
     <template #second>
@@ -19,6 +34,7 @@
 <script setup lang="ts">
 import Splitter from '~/components/splitter/splitter.vue'
 import Votes from '~/components/pages/village/vote/votes.vue'
+import { saveMemos } from '~/components/state/memo/memo'
 
 // props
 interface Props {
@@ -27,6 +43,13 @@ interface Props {
 }
 defineProps<Props>()
 
+defineEmits<{
+  (e: 'refresh-village'): void
+}>()
+
+const isProgress = computed(
+  () => useVillage().value?.status.code === 'IN_PROGRESS'
+)
 const memo = useWholeMemo()
 
 const layout = useLayout()

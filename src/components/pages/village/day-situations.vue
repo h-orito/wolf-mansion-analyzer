@@ -59,7 +59,7 @@ const activeDay = ref(
   displayDaySituations.value[displayDaySituations.value.length - 1].day
 )
 const tabName = (daySituation: VillageDaySituation): string => {
-  if (village.value.epilogueDay === daySituation.day) return 'エピローグ'
+  if (village.value.epilogueDay === daySituation.day) return 'EP'
   else return `${daySituation.day}d`
 }
 

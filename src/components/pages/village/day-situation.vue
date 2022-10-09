@@ -25,7 +25,12 @@
           <template #second>
             <div class="h-full overflow-y-auto flex flex-column">
               <label>{{ daySituation.day }}dメモ</label>
-              <Textarea v-model="memo" class="w-full flex-1" rows="10" />
+              <Textarea
+                v-model="memo"
+                class="w-full flex-1"
+                rows="10"
+                @focusout="save"
+              />
               <div class="flex justify-content-end mt-1">
                 <a class="cursor-pointer" @click="openWholeDailyMemoDialog"
                   >全デイリーメモ確認</a
@@ -44,6 +49,7 @@ import RoomTable from '~/components/pages/village/room/room-table.vue'
 import Footsteps from '~/components/pages/village/footstep/footsteps.vue'
 import Splitter from '~/components/splitter/splitter.vue'
 import { getDailyMemo, setDailyMemo } from '~/components/state/memo/daily-memo'
+import { saveMemos } from '~/components/state/memo/memo'
 
 // props
 interface Props {
@@ -74,4 +80,6 @@ const memo = computed({
 const openWholeDailyMemoDialog = () => {
   useShowWholeDailyMemoDialog().value = true
 }
+
+const save = () => saveMemos()
 </script>

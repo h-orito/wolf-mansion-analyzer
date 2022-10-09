@@ -20,6 +20,7 @@ import {
   getParticipantMemo,
   setParticipantMemo
 } from '~/components/state/memo/participant-memo'
+import { saveMemos } from '~/components/state/memo/memo'
 
 const village = computed(() => useVillage().value!)
 const modal = ref()
@@ -78,7 +79,7 @@ const open = (participantId: number) => {
 }
 
 const save = () => {
-  // TODO
+  saveMemos()
 }
 
 defineExpose({

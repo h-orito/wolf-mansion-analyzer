@@ -5,6 +5,11 @@
         <div class="flex justify-content-end mb-2">
           <ButtonPrimary
             class="py-1 mr-2"
+            label="本家を開く"
+            @click="openMansion"
+          />
+          <ButtonPrimary
+            class="py-1 mr-2"
             label="メモ保存"
             @click="saveMemos"
           />
@@ -25,7 +30,7 @@
     <template #second>
       <div class="h-full overflow-y-auto flex flex-column">
         <label>全体メモ</label>
-        <Textarea v-model="memo" class="w-full flex-1" />
+        <Textarea v-model="memo" class="w-full flex-1" @focusout="saveMemos" />
       </div>
     </template>
   </Splitter>
@@ -51,6 +56,11 @@ const isProgress = computed(
   () => useVillage().value?.status.code === 'IN_PROGRESS'
 )
 const memo = useWholeMemo()
+
+const openMansion = () => {
+  const village = useVillage().value!
+  window.open(`https://wolfort.net/wolf-mansion/village/${village.id}`)
+}
 
 const layout = useLayout()
 </script>

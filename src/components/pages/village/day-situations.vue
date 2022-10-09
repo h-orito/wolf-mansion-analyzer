@@ -8,7 +8,7 @@
         :class="`${activeDay === daySituation.day ? 'active' : ''}`"
         @click="selectDay(daySituation.day)"
       >
-        {{ `${daySituation.day}d` }}
+        {{ tabName(daySituation) }}
       </button>
     </div>
     <div class="day-panel-area flex-1 h-full overflow-y-auto">
@@ -43,16 +43,37 @@ defineEmits<{
   (e: 'memo', participantId: number): void
 }>()
 
+const village = computed(() => useVillage().value!)
+
 const displayDaySituations = computed(() => {
-  return props.daySituations.filter((d) => d.day >= 2)
+  if (village.value.epilogueDay == null) {
+    return props.daySituations.filter((d) => d.day >= 2)
+  } else {
+    return props.daySituations.filter(
+      (d) => d.day >= 2 && d.day <= village!.value.epilogueDay!
+    )
+  }
 })
 
 const activeDay = ref(
   displayDaySituations.value[displayDaySituations.value.length - 1].day
 )
+const tabName = (daySituation: VillageDaySituation): string => {
+  if (village.value.epilogueDay === daySituation.day) return 'エピローグ'
+  else return `${daySituation.day}d`
+}
+
 const selectDay = (day: number) => {
   activeDay.value = day
 }
+
+watch(
+  () => village.value!.id,
+  () => {
+    activeDay.value =
+      displayDaySituations.value[displayDaySituations.value.length - 1].day
+  }
+)
 </script>
 
 <style lang="scss" scoped>

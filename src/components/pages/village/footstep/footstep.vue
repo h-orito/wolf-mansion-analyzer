@@ -9,11 +9,14 @@
       v-model="memo"
       class="w-full p-inputtext-sm"
       placeholder="足音メモ"
+      @focusout="save"
     />
   </td>
 </template>
 
 <script setup lang="ts">
+import { saveMemos } from '~/components/state/memo/memo'
+
 // props
 interface Props {
   id: string
@@ -44,6 +47,8 @@ const memo = computed({
   get: () => props.memo,
   set: (memo: string) => emit('update:memo', memo)
 })
+
+const save = () => saveMemos()
 </script>
 
 <style lang="scss">

@@ -28,9 +28,8 @@ const isShow = computed({
     (useShowWholeDailyMemoDialog().value = value ?? false)
 })
 
-const dailyMemos = getWholeDailyMemos()
 const displayDailyMemos = computed(() =>
-  dailyMemos.filter((dm) => dm.memo.length > 0)
+  getWholeDailyMemos().filter((dm) => dm.memo.length > 0)
 )
 </script>
 

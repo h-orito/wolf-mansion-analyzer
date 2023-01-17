@@ -16,7 +16,7 @@
             class="border-1 border-bluegray-800 cursor-pointer"
             @click="sortBy(day.toString())"
           >
-            {{ `${day}d` }}
+            {{ `${day - 1}d` }}
           </th>
         </thead>
         <tbody>
@@ -68,6 +68,13 @@ onMounted(() => {
 
 watch(
   () => village.value.id,
+  () => {
+    votes.value = initialVotes.value
+  }
+)
+
+watch(
+  () => voteDays.value.length,
   () => {
     votes.value = initialVotes.value
   }

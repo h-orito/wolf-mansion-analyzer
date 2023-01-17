@@ -2,7 +2,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Sarpanch&display=swap');
 
 a {
-  @include styleclass('no-underline text-blue-500');
+  @include styleclass('no-underline text-primary-500');
 }
 
 h1 {

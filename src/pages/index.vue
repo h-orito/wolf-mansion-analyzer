@@ -1,37 +1,53 @@
 <template>
-  <div class="flex flex-column h-full wrapper">
-    <Title>{{ title }}</Title>
-    <VillageHeader @clear-village="clear" />
-    <div class="flex-1 p-2 w-full max-w-full mx-auto h-full overflow-auto">
-      <div class="w-full h-full">
-        <Village
-          v-if="!!situation && !!village"
-          :situation="situation"
-          @refresh-village="refreshVillage"
-        />
-        <div v-else class="flex flex-column h-full">
-          <p>村を選択してください。（開始前の村は表示されません）</p>
-          <Listbox
-            v-model="id"
-            :options="villageCandidates"
-            :filter="true"
-            option-label="label"
-            option-value="value"
-            class="text-left"
-            filter-placeholder="Search"
-            :virtual-scroller-options="{ itemSize: 40 }"
-            list-style="height: 50vh"
-            @change="initVillage"
+  <div class="h-full wrapper">
+    <div class="flex flex-column h-full">
+      <Title>{{ title }}</Title>
+      <VillageHeader
+        @clear-village="clear"
+        @open-sidebar="isShowSidebar = true"
+        @open-instruction="openInstruction"
+      />
+      <div class="flex-1 p-2 w-full max-w-full mx-auto h-full overflow-auto">
+        <div class="w-full h-full">
+          <Village
+            v-if="!!situation && !!village"
+            :situation="situation"
+            @refresh-village="refreshVillage"
           />
+          <div v-else class="flex flex-column h-full">
+            <p>村を選択してください。（開始前の村は表示されません）</p>
+            <Listbox
+              v-model="id"
+              :options="villageCandidates"
+              :filter="true"
+              option-label="label"
+              option-value="value"
+              class="text-left text-xs md:text-base"
+              filter-placeholder="Search"
+              :virtual-scroller-options="{ itemSize: 40 }"
+              list-style="height: 50vh"
+              @change="initVillage"
+            />
+          </div>
         </div>
       </div>
     </div>
+    <VillageSidebar
+      :is-expanded="isShowSidebar"
+      @clear-village="clear"
+      @close="isShowSidebar = false"
+      @open-instruction="openInstruction"
+      @refresh-village="refreshVillage"
+    />
+    <Instruction v-model:show="isShowInstruction" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { Ref } from 'vue'
 import VillageHeader from '~/components/pages/village/header/village-header.vue'
+import VillageSidebar from '~/components/pages/village/village-sidebar.vue'
+import Instruction from '~/components/pages/village/header/instruction.vue'
 import Village from '~/components/pages/village/village.vue'
 import { initMemos, clearMemos, saveMemos } from '~/components/state/memo/memo'
 
@@ -41,7 +57,11 @@ const villagesContent: VillageListContent = await useApi<
 >('api/village-list')
 const villageCandidates = computed(() => {
   return villagesContent.villageList
+<<<<<<< Updated upstream
     .filter((v) => v.status !== '募集中' && v.status !== '廃村')
+=======
+    .filter((v) => v.status !== '募集中' && v.status != '廃村')
+>>>>>>> Stashed changes
     .map((v) => {
       return {
         label: `${v.villageNumber} - ${v.status} - ${v.villageName}`,
@@ -74,6 +94,7 @@ const initVillage = async () => {
 const clear = () => {
   id.value = null
   situation.value = null
+  isShowSidebar.value = false
   clearMemos()
 }
 
@@ -83,6 +104,11 @@ const title = computed(() => {
   const village = situation.value.village
   return base + `${village.id} ${village.name}`
 })
+
+const isShowSidebar = ref(false)
+
+const isShowInstruction = ref(false)
+const openInstruction = () => (isShowInstruction.value = true)
 </script>
 
 <style lang="scss">

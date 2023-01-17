@@ -14,7 +14,8 @@ export default defineNuxtConfig({
     }
   },
   css: [
-    'primevue/resources/themes/vela-green/theme.css',
+    // 'primevue/resources/themes/vela-green/theme.css',
+    '@/assets/scss/_theme.scss',
     'primevue/resources/primevue.css',
     'primeicons/primeicons.css',
     'primeflex/primeflex.css',

@@ -1,5 +1,25 @@
 <template>
+  <div v-if="$isSp">
+    <div
+      class="flex justify-content-start align-items-center bg-bluegray-900 w-full"
+    >
+      <ButtonPrimary
+        icon="bars"
+        class="ml-1 mr-2 my-1"
+        label=""
+        outlined
+        @click="$emit('open-sidebar')"
+      />
+      <div v-if="village">{{ `${village.id}. ${village.name}` }}</div>
+      <div v-else>
+        <NuxtLink to="/" class="title-font text-white text-xl"
+          >WOLF MANSION ANALYZER</NuxtLink
+        >
+      </div>
+    </div>
+  </div>
   <div
+    v-else
     class="flex justify-content-center align-items-center bg-bluegray-900 w-full"
   >
     <div class="text-left px-2">
@@ -12,7 +32,7 @@
       <a class="cursor-pointer" @click="$emit('clear-village')">村変更</a>
     </div>
     <div class="ml-2 mr-2 my-auto">
-      <a class="cursor-pointer" @click="openInstruction()">説明書</a>
+      <a class="cursor-pointer" @click="$emit('open-instruction')">説明書</a>
     </div>
     <div v-if="player" class="ml-2 mr-2 my-auto">
       <a class="cursor-pointer" @click="logout">ログアウト</a>
@@ -27,16 +47,16 @@
         class="layout-select"
       />
     </div>
-    <Instruction v-model:show="isShowInstruction" />
   </div>
 </template>
 
 <script setup lang="ts">
-import Instruction from './instruction.vue'
 import { logoutPlayer } from '~/components/auth/auth-cookie'
 
 defineEmits<{
   (e: 'clear-village'): void
+  (e: 'open-sidebar'): void
+  (e: 'open-instruction'): void
 }>()
 
 const village = useVillage()
@@ -56,9 +76,6 @@ const layouts = computed(() => {
 })
 
 const villageLayout = useLayout()
-
-const isShowInstruction = ref(false)
-const openInstruction = () => (isShowInstruction.value = true)
 
 const player = usePlayer()
 const logout = () => {

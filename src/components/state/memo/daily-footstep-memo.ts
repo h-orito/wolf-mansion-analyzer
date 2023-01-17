@@ -5,9 +5,10 @@ export const initDailyFootstepMemos = (
   if (!!memos) {
     useDailyFootstepMemos(
       daySituations.map((daySituation) => {
-        const existing = memos!.dailyFootstepMemos.find(
-          (dfm) => dfm.day === daySituation.day
-        )
+        const existing =
+          memos!.dailyFootstepMemos?.find(
+            (dfm) => dfm.day === daySituation.day
+          ) ?? null
         return existing || mapFootstepMemo(daySituation)
       })
     )

@@ -4,7 +4,8 @@ export const initDailyMemos = (memos: PlayerMemo | null, village: Village) => {
       village.days.list
         .filter((d) => d.day >= 2)
         .map((d) => {
-          const existing = memos!.dailyMemos.find((dm) => dm.day === d.day)
+          const existing =
+            memos!.dailyMemos?.find((dm) => dm.day === d.day) ?? null
           return existing || getInitial(d.day)
         })
     )

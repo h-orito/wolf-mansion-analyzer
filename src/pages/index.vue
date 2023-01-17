@@ -41,10 +41,10 @@ const villagesContent: VillageListContent = await useApi<
 >('api/village-list')
 const villageCandidates = computed(() => {
   return villagesContent.villageList
-    .filter((v) => v.status !== '募集中')
+    .filter((v) => v.status !== '募集中' && v.status !== '廃村')
     .map((v) => {
       return {
-        label: `${v.villageNumber} - ${v.villageName}`,
+        label: `${v.villageNumber} - ${v.status} - ${v.villageName}`,
         value: v.villageId
       }
     })

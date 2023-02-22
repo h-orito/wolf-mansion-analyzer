@@ -14,6 +14,9 @@
     <div class="ml-2 mr-2 my-auto">
       <a class="cursor-pointer" @click="openInstruction()">説明書</a>
     </div>
+    <div class="ml-2 mr-2 my-auto">
+      <a class="cursor-pointer" @click="openDonation()">投げ銭</a>
+    </div>
     <div v-if="player" class="ml-2 mr-2 my-auto">
       <a class="cursor-pointer" @click="logout">ログアウト</a>
       &nbsp;ユーザID: {{ player.name }}
@@ -28,11 +31,13 @@
       />
     </div>
     <Instruction v-model:show="isShowInstruction" />
+    <Donation v-model:show="isShowDonation" />
   </div>
 </template>
 
 <script setup lang="ts">
 import Instruction from './instruction.vue'
+import Donation from './donation.vue'
 import { logoutPlayer } from '~/components/auth/auth-cookie'
 
 defineEmits<{
@@ -59,6 +64,9 @@ const villageLayout = useLayout()
 
 const isShowInstruction = ref(false)
 const openInstruction = () => (isShowInstruction.value = true)
+
+const isShowDonation = ref(false)
+const openDonation = () => (isShowDonation.value = true)
 
 const player = usePlayer()
 const logout = () => {

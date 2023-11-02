@@ -47,10 +47,10 @@ const village = computed(() => useVillage().value!)
 
 const displayDaySituations = computed(() => {
   if (village.value.epilogueDay == null) {
-    return props.daySituations.filter((d) => d.day >= 2)
+    return props.daySituations.filter((d) => d.day >= 1)
   } else {
     return props.daySituations.filter(
-      (d) => d.day >= 2 && d.day <= village!.value.epilogueDay!
+      (d) => d.day >= 1 && d.day <= village!.value.epilogueDay!
     )
   }
 })

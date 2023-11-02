@@ -130,9 +130,9 @@ const charaImageByParticipantId = (
   url: string
 } => {
   const chara = props.participantIdToChara[id] as Chara
-  const url = chara.images.list.find(
-    (i: CharaImage) => i.faceType.code === 'NORMAL'
-  )!.url
+  const url =
+    chara.images.list.find((i: CharaImage) => i.faceType.code === 'NORMAL')
+      ?.url || chara.images.list[0].url
   return {
     width: chara.size.width,
     height: chara.size.height,

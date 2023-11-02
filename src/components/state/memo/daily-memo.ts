@@ -2,7 +2,7 @@ export const initDailyMemos = (memos: PlayerMemo | null, village: Village) => {
   if (!!memos) {
     useDailyMemos(
       village.days.list
-        .filter((d) => d.day >= 2)
+        .filter((d) => d.day >= 1)
         .map((d) => {
           const existing =
             memos!.dailyMemos?.find((dm) => dm.day === d.day) ?? null
@@ -13,7 +13,7 @@ export const initDailyMemos = (memos: PlayerMemo | null, village: Village) => {
   }
 
   useDailyMemos(
-    village.days.list.filter((d) => d.day >= 2).map((d) => getInitial(d.day))
+    village.days.list.filter((d) => d.day >= 1).map((d) => getInitial(d.day))
   )
 }
 
@@ -37,8 +37,4 @@ export const setDailyMemo = (day: number, memo: DailyMemo) => {
 
 export const getWholeDailyMemos = () => {
   return useDailyMemos().value!
-}
-
-export const saveDailyMemo = () => {
-  // TODO: RTDBに保存
 }
